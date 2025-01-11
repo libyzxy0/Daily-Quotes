@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Platform, View } from 'react-native';
+import { Image, StyleSheet, Platform, View, ActivityIndicator } from 'react-native';
 import { AppButton } from '@/components/AppButton'
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
@@ -6,14 +6,25 @@ import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from "@/components/ui/IconSymbol"
 import { ExternalLink } from '@/components/ExternalLink'
 import { useState } from 'react'
+import { useQuote } from "@/hooks/useQuotes"
+
 export default function HomeScreen() {
-  const [quote, setQoute] = useState("You don't have to be great to start, but you have to start to be great.");
+  const { quote, loading, error, getQuote } = useQuote();
+  
+  if(loading) {
+    return (
+    <ThemedView style={styles.loadingContainer}>
+      <ActivityIndicator color="#0af2a7" size="large" />
+    </ThemedView>
+    )
+  }
+  
   return (
     <ParallaxScrollView
-      bgImageUrl={`https://image.pollinations.ai/prompt/${encodeURIComponent(quote)}`}
+      bgImageUrl={quote?.image}
       headerImage={
         <Image
-          source={{ uri: `https://image.pollinations.ai/prompt/${encodeURIComponent(quote)}`}}
+          source={{ uri: quote?.image }}
           style={styles.image}
         />
       }>
@@ -22,20 +33,21 @@ export default function HomeScreen() {
           <View style={styles.quoteIcon}>
             <IconSymbol name="quote.fill" color="#0af2a7" size={34} />
           </View>
-          {quote}
+          {quote?.quote}
         </ThemedText>
-        <ThemedText style={styles.advice}>To overcome feelings of tiredness and lack of motivation, start by taking care of your physical and mental well-being. Establish a consistent routine that includes time for rest, exercise, and activities that bring you joy and relaxation. By prioritizing self-care and taking small actions towards your goals, you'll be able to build momentum and develop the habits necessary to achieve greatness.</ThemedText>
+        <ThemedText style={styles.advice}>{quote?.advice}</ThemedText>
       </ThemedView>
       <ThemedView style={styles.buttonContainer}>
         <AppButton buttonStyles={styles.readButton}>
          Read More
        </AppButton>
-       <AppButton buttonStyles={styles.nextButton}>
+       <AppButton onPress={() => getQuote()} buttonStyles={styles.nextButton}>
          Got It!
        </AppButton>
       </ThemedView>
       <ThemedView style={{
-        marginTop: 20
+        marginTop: 20,
+        marginBottom: 20
       }}>
         <ThemedText style={{
           fontSize: 13,
@@ -61,7 +73,7 @@ const styles = StyleSheet.create({
     width: 290,
     borderRadius: 20,
     borderColor: "#0af2a7",
-    borderWidth: 2
+    borderWidth: 1.5
   },
   advice: {
     marginTop: 20
@@ -87,5 +99,9 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flex: 1,
     flexDirection: "row",
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center'
   }
 });

@@ -15,7 +15,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.libyzxy0.dailyquote"
     },
     "web": {
       "bundler": "metro",
@@ -36,12 +37,23 @@
       [
         "expo-font",
         {
-          "fonts": ["./assets/fonts/Poppins-Regular.ttf"]
-        },
+          "fonts": [
+            "./assets/fonts/Poppins-Regular.ttf"
+          ]
+        }
       ]
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "3c9f7c16-2fc3-4372-81f0-3098084513a0"
+      }
+    },
+    "owner": "libyzxy0"
   }
 }
